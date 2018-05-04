@@ -2,12 +2,82 @@
 
 一个五子棋的简单合约，参考[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)
 
-* 添加了一个显示棋盘一维数组的请求接口
 * 一些简单的修改
 
+* 添加了一个显示棋盘一维数组的请求接口
 
+  `getboard`:
 
-测试输出:
+  ```
+  struct getboard
+  {
+      account_name challenger;
+      account_name host;
+      account_name by;
+  
+      EOSLIB_SERIALIZE(getboard, (challenger)(host)(by))
+  };
+  ```
+
+  ```
+  
+      void on(const getboard &p)
+      {
+          eosio::require_auth(p.by);
+  
+          games existing_host_games(code_account, p.host);
+          auto iter = existing_host_games.find(p.challenger);
+          eosio_assert(iter != existing_host_games.end(),
+                       "game doesn't exists");
+          eosio_assert(p.by == iter->host || p.by == iter->challenger,
+                       "this is not your game!");
+  
+          for (index_type i = 0, index = 0; i < game::BOARD_LEN * game::BOARD_LEN; ++i)
+          {
+              printi(iter->board[index++]);
+          }
+      }
+  ```
+
+* Tic-Tac-Toe中的movement与move在gobang中合并为movment:
+
+  `movement`与`move`:
+
+  ```
+     struct movement {
+        uint32_t    row;
+        uint32_t    column;
+  
+        EOSLIB_SERIALIZE( movement, (row)(column) )
+     };
+  
+     struct move {
+        account_name   challenger;
+        account_name   host;
+        account_name   by; // the account who wants to make the move
+        movement       mvt;
+  
+        EOSLIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
+     };
+  ```
+
+  `movment`:
+
+  ```
+  struct movment
+  {
+      index_type x;
+      index_type y;
+  
+      account_name challenger;
+      account_name host;
+      account_name by;
+  
+      EOSLIB_SERIALIZE(movment, (x)(y)(challenger)(host)(by))
+  };
+  ```
+
+##测试输出:
 
 ```
 ± % cleos push action gobang create '{"challenger":"player2","host":"player1"}' --permission player1@active                                                                                                                                          !4327
