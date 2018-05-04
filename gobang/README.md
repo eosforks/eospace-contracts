@@ -77,7 +77,7 @@
   };
   ```
 
-## 测试指令
+## 测试指令
 
 **预准备**：创建三个账号`gobang`,`player1`,`player2` ，并设置gobang账号contracts为本五子棋合约
 
@@ -95,23 +95,23 @@
 
   
 
-_创建游戏_  `成功`
+_创建游戏_  `成功`
 ```
 cleos push action gobang create '{"challenger":"player2","host":"player1"}' --permission player1@active  
 ```
-_获取棋盘状态_ `成功`
+_获取棋盘状态_ `成功`
 ```
 cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active  
 ```
-_玩家2在（0，0）下子_  `失败：不是玩家2回合`
+_玩家2在（0，0）下子_  `失败：不是玩家2回合`
 ```
 cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
 ```
-_玩家1在（0，0）下子_ `成功`
+_玩家1在（0，0）下子_ `成功`
 ```
 cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player2"}' --permission player1@active
 ```
-_玩家1在（0，0）下子_ `失败：不是玩家1回合`
+_玩家1在（0，0）下子_ `失败：不是玩家1回合`
 ```
  cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active 
 ```
@@ -128,7 +128,7 @@ _玩家2在（0，1）下子_ `成功`
 cleos push action gobang movment '{"x":0,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
 ```
 
-_获取棋盘状态_ `成功`
+_获取棋盘状态_ `成功`
 
 ```
 cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
