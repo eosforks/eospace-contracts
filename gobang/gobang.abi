@@ -1,0 +1,86 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "game",
+      "base": "",
+      "fields": [
+        {"name":"board", "type":"uint8[]"},
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"},
+        {"name":"turn", "type":"account_name"},
+        {"name":"winner", "type":"account_name"}
+      ]
+    },{
+      "name": "create",
+      "base": "",
+      "fields": [
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"}
+      ]
+    },{
+      "name": "restart",
+      "base": "",
+      "fields": [
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"},
+        {"name":"by", "type":"account_name"}
+      ]
+    },{
+      "name": "getboard",
+      "base": "",
+      "fields": [
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"},
+        {"name":"by", "type":"account_name"}
+      ]  
+    },{
+      "name": "close",
+      "base": "",
+      "fields": [
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"}
+      ]
+    },{
+      "name": "movment",
+      "base": "",
+      "fields": [
+        {"name":"x", "type":"uint32"},
+        {"name":"y", "type":"uint32"},
+        {"name":"challenger", "type":"account_name"},
+        {"name":"host", "type":"account_name"},
+        {"name":"by", "type":"account_name"}
+      ]
+    }
+  ],
+  "actions": [{
+      "name": "create",
+      "type": "create",
+      "ricardian_contract": ""
+    },{
+      "name": "restart",
+      "type": "restart",
+      "ricardian_contract": ""
+    },{
+      "name": "getboard",
+      "type": "getboard",
+      "ricardian_contract": ""
+    },{
+      "name": "close",
+      "type": "close",
+      "ricardian_contract": ""
+    },{
+      "name": "movment",
+      "type": "movment",
+      "ricardian_contract": ""
+    }
+  ],
+  "tables": [{
+        "name": "games",
+        "type": "game",
+        "index_type": "i64",
+        "key_names" : ["challenger"],
+        "key_types" : ["account_name"]
+      }
+  ],
+  "ricardian_clauses": []
+}
