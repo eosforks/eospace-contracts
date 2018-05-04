@@ -1,8 +1,10 @@
 # gobang
 
-一个五子棋的简单合约，参考[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)
+一个五子棋的简单合约，**参考**[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)
 
-* 一些简单的修改
+##工作部分
+
+* 一些小修改
 
 * 添加了一个显示棋盘一维数组的请求接口
 
@@ -20,23 +22,21 @@
   ```
 
   ```
-  
-      void on(const getboard &p)
-      {
-          eosio::require_auth(p.by);
-  
-          games existing_host_games(code_account, p.host);
-          auto iter = existing_host_games.find(p.challenger);
-          eosio_assert(iter != existing_host_games.end(),
-                       "game doesn't exists");
-          eosio_assert(p.by == iter->host || p.by == iter->challenger,
-                       "this is not your game!");
-  
-          for (index_type i = 0, index = 0; i < game::BOARD_LEN * game::BOARD_LEN; ++i)
-          {
-              printi(iter->board[index++]);
-          }
-      }
+  void on(const getboard &p);
+  ```
+
+* 修改棋盘
+
+  ```
+  board_type board[BOARD_LEN * BOARD_LEN];
+  ```
+
+* 修改游戏逻辑
+
+  ```
+  bool is_index_inrange(index_type x, index_type y);
+  bool is_valid_movement(const movment &mvt, const game &gm);
+  bool check_win(index_type x, index_type y, const game &gm);
   ```
 
 * Tic-Tac-Toe中的movement与move在gobang中合并为movment:
@@ -77,7 +77,130 @@
   };
   ```
 
-## 测试输出:
+## 测试指令
+
+**预准备**：创建三个账号`gobang`,`player1`,`player2` ，并设置gobang账号contracts为本五子棋合约
+
+* 见[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)
+
+  ```
+  cleos create account ${creator_name} gobang ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
+  
+  cleos create account ${creator_name} player1 ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
+  
+  cleos create account ${creator_name} player2 ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
+  
+  cleos set contract gobang ${gobang_folder}
+  ```
+
+  
+
+_创建游戏_  `成功`
+```
+cleos push action gobang create '{"challenger":"player2","host":"player1"}' --permission player1@active  
+```
+_获取棋盘状态_ `成功`
+```
+cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active  
+```
+_玩家2在（0，0）下子_  `失败：不是玩家2回合`
+```
+cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+```
+_玩家1在（0，0）下子_ `成功`
+```
+cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player2"}' --permission player1@active
+```
+_玩家1在（0，0）下子_ `失败：不是玩家1回合`
+```
+ cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active 
+```
+
+_玩家2在（0，0）下子_ `失败：非法位置（已经有子）`
+
+```
+ cleos push action gobang movment '{"x":0,"y":0,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+```
+
+_玩家2在（0，1）下子_ `成功`
+
+```
+cleos push action gobang movment '{"x":0,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+```
+
+_获取棋盘状态_ `成功`
+
+```
+cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_连下7子，玩家1达成五子条件_  `成功`
+
+```
+cleos push action gobang movment '{"x":1,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+
+cleos push action gobang movment '{"x":1,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+
+cleos push action gobang movment '{"x":2,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+
+cleos push action gobang movment '{"x":2,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+
+cleos push action gobang movment '{"x":3,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+
+cleos push action gobang movment '{"x":3,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active 
+
+cleos push action gobang movment '{"x":4,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_玩家2在（4，1）下子_ `失败：游戏已结束`
+
+```
+cleos push action gobang movment '{"x":4,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+```
+
+_获取棋盘信息_ `成功`
+
+```
+cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_重置棋盘_ `成功`
+
+```
+cleos push action gobang restart '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_获取棋盘信息_ `成功，此时棋盘为空`
+
+```
+cleos push action gobang getboard '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_玩家2在（4，1）下子_  `失败：不是玩家2回合`
+
+```
+cleos push action gobang movment '{"x":4,"y":1,"challenger":"player2","host":"player1","by":"player2"}' --permission player2@active
+```
+
+_玩家1在（4，0）下子_  `成功`
+
+```
+cleos push action gobang movment '{"x":4,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_结束游戏_ `成功`
+
+```
+cleos push action gobang close '{"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+_玩家1在（4，0）下子_ `失败：无该游戏`
+
+```
+cleos push action gobang movment '{"x":4,"y":0,"challenger":"player2","host":"player1","by":"player1"}' --permission player1@active
+```
+
+## 测试输出
 
 ```
 ± % cleos push action gobang create '{"challenger":"player2","host":"player1"}' --permission player1@active                                                                                                                                          !4327
