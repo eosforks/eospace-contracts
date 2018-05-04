@@ -77,7 +77,7 @@
   };
   ```
 
-##测试输出:
+## 测试输出:
 
 ```
 ± % cleos push action gobang create '{"challenger":"player2","host":"player1"}' --permission player1@active                                                                                                                                          !4327
