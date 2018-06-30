@@ -1,6 +1,6 @@
-# gobang
+# EOS五子棋合约: gobang
 
-一个五子棋的简单合约，**参考**[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)
+一个五子棋的简单合约，**参考**[Tic-Tac-Toe](https://github.com/EOSIO/eos/wiki/Tutorial-Tic-Tac-Toe)，以下实验基于**eosio/eos:20180521**这个版本实现。
 
 ## 工作部分
 
@@ -16,7 +16,7 @@
       account_name challenger;
       account_name host;
       account_name by;
-  
+
       EOSLIB_SERIALIZE(getboard, (challenger)(host)(by))
   };
   ```
@@ -47,16 +47,16 @@
      struct movement {
         uint32_t    row;
         uint32_t    column;
-  
+
         EOSLIB_SERIALIZE( movement, (row)(column) )
      };
-  
+
      struct move {
         account_name   challenger;
         account_name   host;
         account_name   by; // the account who wants to make the move
         movement       mvt;
-  
+
         EOSLIB_SERIALIZE( move, (challenger)(host)(by)(mvt) )
      };
   ```
@@ -68,14 +68,102 @@
   {
       index_type x;
       index_type y;
-  
+
       account_name challenger;
       account_name host;
       account_name by;
-  
+
       EOSLIB_SERIALIZE(movment, (x)(y)(challenger)(host)(by))
   };
   ```
+
+## 创建Key
+
+首先我们给这个游戏单独创建一个key:
+
+```
+cleos create key
+```
+
+```
+Private key: ***************************
+Public key: EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F
+```
+
+## 创建钱包
+
+然后我们单独为这个游戏创建一个钱包:
+
+```
+cleos wallet create -n gobang
+```
+
+得到结果:
+
+```
+Creating wallet: gobang
+Save password to use in the future to unlock this wallet.
+Without password imported keys will not be retrievable.
+"***************************"
+```
+
+## 导入key
+
+这里需要导入在`cleos create key`中创建的 **private key** :
+
+```
+cleos wallet import -n gobang ******************************
+```
+
+## 创建账号
+
+我们单独为这个游戏创建三个账号:
+
+```
+cleos create account eosio gobang EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F
+cleos create account eosio player1 EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F
+cleos create account eosio player2 EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F EOS7VXqbbkqUxyhDYsJiwSuxzMPsV6JAMbezoJmU7hQ45VuBc5y3F
+```
+
+得到结果:
+
+```
+executed transaction: 2f7471a89e502ec549181211721a4a872fde37375c1ba59f76921a76db1c9595  288 bytes  248 us
+#         eosio <= eosio::newaccount            {"creator":"eosio","name":"gobang","owner":{"threshold":1,"keys":[{"key":"EOS7VXqbbkqUxyhDYsJiwSuxzM...
+warning: transaction executed locally, but may not be confirmed by the network yet
+executed transaction: e6be0000f8b975d8e7aa18afa22ea1bb6b55528f4ba6c6ef76e4fb658b401d35  288 bytes  230 us
+#         eosio <= eosio::newaccount            {"creator":"eosio","name":"player1","owner":{"threshold":1,"keys":[{"key":"EOS7VXqbbkqUxyhDYsJiwSuxz...
+warning: transaction executed locally, but may not be confirmed by the network yet
+executed transaction: f3b9590b76804dcd1759e256b82a9a3fbb22c512d2f545701f7a19cef56558de  288 bytes  262 us
+#         eosio <= eosio::newaccount            {"creator":"eosio","name":"player2","owner":{"threshold":1,"keys":[{"key":"EOS7VXqbbkqUxyhDYsJiwSuxz...
+warning: transaction executed locally, but may not be confirmed by the network yet
+```
+
+## 部署合约
+
+请将下面的合约地址换成自己的合约地址：
+
+```
+cleos set contract gobang /opt/eosio/bin/eos-contracts/gobang
+```
+
+得到结果：
+
+```
+Reading WAST/WASM from /opt/eosio/bin/eos-contracts/gobang/gobang.wast...
+Assembling WASM...
+Publishing contract...
+executed transaction: b7579d68f73bf62ea24ef0313f316032501fb3e1d2fe4d88394fa9daea558d99  4976 bytes  3013 us
+#         eosio <= eosio::setcode               {"account":"gobang","vmtype":0,"vmversion":0,"code":"0061736d01000000016c1260000060027e7e0060017e006...
+#         eosio <= eosio::setabi                {"account":"gobang","abi":"0000060467616d65000505626f6172640775696e74385b5d0a6368616c6c656e6765720c6...
+warning: transaction executed locally, but may not be confirmed by the network yet
+```
+
+## 创建游戏
+
+
+
+
 
 ## 测试指令
 
@@ -85,15 +173,14 @@
 
   ```
   cleos create account ${creator_name} gobang ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
-  
+
   cleos create account ${creator_name} player1 ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
-  
+
   cleos create account ${creator_name} player2 ${contract_pub_owner_key} ${contract_pub_active_key} --permission ${creator_name}@active
-  
+
   cleos set contract gobang ${gobang_folder}
   ```
 
-  
 
 _创建游戏_  `成功`
 ```
