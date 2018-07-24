@@ -1,0 +1,45 @@
+bbbmmm:
+{
+  "masterPrivateKey":"PW5JxTVt3RmMVwmiD6kgY79snR8eocvpcKEDK27xjD5HEbJGWsjvz",
+  "privateKeys":{
+      "owner":"5Ja1HL1E65uS9GK81usLgeKb2NiAw7N8XMUX56U12EXvm3ULJmF",
+      "active":"5KS5jvNyGuh1fLjNXR54FMWfJi53GhXzWSk6RnGhMLVQ31cFDBE"
+  },
+  "publicKeys":{
+      "owner":"EOS6CS6juoqyoFdZzWDSHsVFCZLDiMn58AQ7nHttvkshC9CduLFnB",
+      "active":"EOS4zDtrpSQ6R1SjUPMmvjBur989aTEya7pDgDGH5LQkupDRpyNHT"
+  }
+}
+
+askbm:
+{
+  "masterPrivateKey":"PW5JhwsFkdBqYcMcFJDwYjX1wWvtD8zFPCpGgsY5XTygMUZTfHit5",
+  "privateKeys":{
+      "owner":"5KZKvrdp2WQduX4nHZro7Lp9rGcWc6jZhTv1J8twNMRyx5i8JY8",
+      "active":"5HyhahS9tPv897mQqySKvbt8FTKe6NnvdiU2QuJ4yowxD2yaSFp"
+  },
+  "publicKeys":{
+      "owner":"EOS7ZNy2QrqYk4iS2EuUruYA1V3WihusvyC7ujPPXksrtFSR2BuoY",
+      "active":"EOS6WJafWQ15SvMokeogGN3ZsiK9PNufEwVRLoox4MsQA28dgHY5D"
+  }
+}
+
+mom:
+{
+  "masterPrivateKey":"PW5Jww94MudJT9hMmwDXHTxTjDoCA9MigfZNicQz1YPwMy115wgV2",
+  "privateKeys":{
+      "owner":"5JPSx7Htsa39x61hYqoZ5vPoF77LxVKVdw6XdbnewZBG8GFQHKe",
+      "active":"5KPMUYMbA9gXmriqi6YSTZxphX96j7yy8gc27YZJjZPVa1TZqcX"
+  },
+  "publicKeys":{
+      "owner":"EOS6QNncdF496NUeCiGUm7WtumXUqmneEGBNYtTx6NC7VQPrbUU9N",
+      "active":"EOS73ckjyg6SbyBMbXsXETfrFnpaVZtEKicv4crqLgG1dA5pew66a"
+  }
+}
+
+cleos get currency balance eosio.token bbbmmm
+cleos get currency balance eosio.token askbm
+cleos get currency balance eosio.token mom
+
+
+Will EOS rise to 200$ before 2019/01/01?
