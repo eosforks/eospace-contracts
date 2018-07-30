@@ -19,3 +19,7 @@ cleos -u https://api-kylin.eosasia.one push action eospacetwitt send '[ "eospace
 ```
 
 Have fun with it!
+
+## About
+
+All the data is on chain, and it can be found here: https://www.cryptokylin.io/#/tx/eospacetwitt
