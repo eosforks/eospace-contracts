@@ -18,5 +18,10 @@ Modify these by your own needs.
 ```
 
 ## Usage
+
 - First ensure that the number of NEW_TOKEN_TYPE virtual tokens of the contract is sufficient.
 - Then claim the token like this: `cleos push action airdrop update '["user1"]' -p user1`, where `user1` is the account name of your EOS account.
+
+## Demo
+
+Contract has been deployed on Kylin-Testnet, see more details in [airdrop.kylin.sh](https://github.com/EOSpace/eos-contracts/tree/master/airdrop/doc/airdrop.kylin.sh)
