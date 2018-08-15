@@ -20,3 +20,6 @@ EOS版本todo
 
 EOS用户向合约地址发送0EOS，即可获得与用户余额数量一致的合约token。
 
+### kylintpsbest
+
+测试Kylin测试网TPS
