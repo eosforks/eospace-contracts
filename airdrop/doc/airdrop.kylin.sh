@@ -25,7 +25,6 @@ cleos get currency balance myairdrop111 myairdrop113
 
 # Users claim airdrop tokens
 cleos push action myairdropooo update '["myairdrop112"]' -p myairdrop112
-cleos push action myairdropooo update '["myairdrop113"]' -p myairdrop113
 
 # Check balance
 cleos get currency balance myairdrop111 myairdropooo
